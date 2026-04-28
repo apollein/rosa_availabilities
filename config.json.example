@@ -1,0 +1,6 @@
+{
+    "signal": true,
+    "signal-server": "127.0.0.1:8080",
+    "signal-phone-number": "+33142928100",
+    "rosa-url": "https://rosa.be/fr/booking/whatever"
+}

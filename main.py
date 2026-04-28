@@ -2,20 +2,19 @@ import requests
 from datetime import datetime, timedelta, date
 from signalbot import SignalBot, Config, Command, Context, triggered, enable_console_logging
 import asyncio
-import argparse
 from os import path, getcwd
 import time
 import random
 import sys
+import json
 
 def choose_user_agent():
 	user_agents = ["Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.10 Safari/605.1.1", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GSA/360.1.737798518 Mobile/15E148 Safari/604.", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.3", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.3"]
 	user_agent = user_agents[random.randint(0, len(user_agents)-1)]
 	return user_agent
 
-async def main(phone_number, server, url):
+async def main(phone_number, server, url, cwd):
 	headers = {"User-Agent": choose_user_agent()}
-	cwd = getcwd()
 	try:
 		bot = SignalBot(Config(signal_service=server, phone_number=phone_number, connection_mode="http_only",))
 	except Exception as e:
@@ -55,10 +54,16 @@ async def main(phone_number, server, url):
 		exit(1)
 
 if __name__=="__main__":
-	parser = argparse.ArgumentParser()
-	parser.add_argument("phone_number", help="Signal phone number", type=str, )
-	parser.add_argument("server", help="Signal REST API server", type=str, )
-	parser.add_argument("url", help="ROSA Url", type=str, )
-	args = parser.parse_args()
-	time.sleep(random.randint(0, 2))
-	asyncio.run(main(args.phone_number, args.server, args.url))
+	cwd = getcwd()
+	with open('{}/config.json'.format(cwd), 'r') as f:
+		try:
+			parameters = json.load(f)
+		except Exception as e:
+			print("No configuration file found. Exiting.")
+			exit(1)
+		time.sleep(random.randint(0, 1))
+		if parameters['signal']:
+			asyncio.run(main(parameters['signal-phone-number'], parameters['signal-server'], parameters['rosa-url'], cwd))
+		else:
+			print("Not supported.")
+			exit(1)
