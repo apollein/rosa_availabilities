@@ -34,13 +34,19 @@ async def main(phone_number, server, url, cwd):
 			if len(r['availabilities'])!=0:
 				if 'date' in r['availabilities'][0]:
 					d = datetime.fromisoformat(r['availabilities'][0]['date'])+timedelta(hours=2)
+					if path.exists('{}/firstdate'.format(cwd)):
+						with open('{}/firstdate'.format(cwd), w) as f:
+							current_date = datetime.strptime(f.read().strip(), '%d-%m-%Y')
+							f.write(current_date)
 					if path.exists('{}/currentdate'.format(cwd)):
 						with open('{}/currentdate'.format(cwd), 'r') as f:
 							current_date = datetime.strptime(f.read().strip(), '%d-%m-%Y')
 						if current_date.date()!=d.date():
 							with open('{}/currentdate'.format(cwd), 'w') as f:
 								f.write(d.strftime('%d-%m-%Y'))
-							if d.date()<date(2027, 3, 25):
+							with open('{}/firstdate'.format(cwd), r) as f:
+								first_date = datetime.strptime(f.read.strip(), '%d-%m-%Y')
+							if d.date()<first_date:
 								if current_date.date()>d.date():
 									await bot.send(phone_number, '✨ nouveau rdv le {} pour Leempoel ✨'.format(d.strftime('%d-%m-%Y')))
 					else:
@@ -48,14 +54,14 @@ async def main(phone_number, server, url, cwd):
 							f.write(d.strftime('%d-%m-%Y'))
 	except Exception as e:
 		print(str(e), file=sys.stderr)
-		await bot.send("{} {}".format(datetime.now().strftime("%d/%m/%y %H:%M:%S"), str(e)))
+		await bot.send(phone_number, "{} {}".format(datetime.now().strftime("%d/%m/%y %H:%M:%S"), str(e)))
 		with open('{}/errors'.format(cwd), 'a') as f:
 			f.write("{} {}".format(datetime.now().strftime("%d/%m/%y %H:%M:%S"), str(e)))
 		exit(1)
 
 if __name__=="__main__":
 	cwd = getcwd()
-	with open('{}/config.json'.format(cwd), 'r') as f:
+	with open('{}/config.json'.format(str(cwd)), 'r') as f:
 		try:
 			parameters = json.load(f)
 		except Exception as e:
