@@ -2,7 +2,7 @@
 Allows an user to check if a MD has closer availibilities than before, through Signal notifications.
 It requires:
 
-- https://github.com/kahrpatrick/signal-cli-rest-api
+- https://github.com/signalbot-org/signalbot
 - a crontab to run it frequently
 - a Signal account
 - the link to Rosa's API that returns availabilities for a MD. Use F12 on your navigator, but functions to get that automatically will be implemented.
