@@ -5,6 +5,7 @@ It requires:
 - https://github.com/bbernhard/signal-cli-rest-api
 - a crontab to run it frequently
 - a Signal account
+- the link to Rosa's API that returns availabilities for a MD. Use F12 on your navigator, but functions to get that automatically will be implemented.
 
 This project is not related in any way to Rosa ASBL.
 
