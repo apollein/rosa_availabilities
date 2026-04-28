@@ -8,8 +8,13 @@ import time
 import random
 import sys
 
+def choose_user_agent():
+	user_agents = ["Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.10 Safari/605.1.1", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 OPR/117.0.0.", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GSA/360.1.737798518 Mobile/15E148 Safari/604.", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.3", "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.3"]
+	user_agent = user_agents[random.randint(0, len(user_agents)-1)]
+	return user_agent
+
 async def main(phone_number, server, url):
-	headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0"}
+	headers = {"User-Agent": choose_user_agent()}
 	cwd = getcwd()
 	try:
 		bot = SignalBot(Config(signal_service=server, phone_number=phone_number, connection_mode="http_only",))
@@ -55,5 +60,5 @@ if __name__=="__main__":
 	parser.add_argument("server", help="Signal REST API server", type=str, )
 	parser.add_argument("url", help="ROSA Url", type=str, )
 	args = parser.parse_args()
-	time.sleep(random.randint(0, 10))
+	time.sleep(random.randint(0, 2))
 	asyncio.run(main(args.phone_number, args.server, args.url))
